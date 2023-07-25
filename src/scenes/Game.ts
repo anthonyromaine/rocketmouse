@@ -136,10 +136,6 @@ export default class Game extends Phaser.Scene {
     this.wrapBookcases();
     this.wrapLaserObstacle();
 
-    console.log("run speed: " + this.mouse.runSpeed);
-    console.log("fall speed: " + this.mouse.fallSpeed);
-    console.log("fly speed: " + this.mouse.flySpeed);
-
     this.background.setTilePosition(this.cameras.main.scrollX);
     this.teleportBackwards();
   }
