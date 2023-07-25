@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import TextureKeys from "../consts/TextureKeys";
 import SceneKeys from "../consts/SceneKeys";
-import RocketMouse from "../game/RocketMouse";
+import RocketMouse, { MouseState } from "../game/RocketMouse";
 import LaserObstacle from "../game/LaserObstacle";
 
 export default class Game extends Phaser.Scene {
@@ -20,6 +20,8 @@ export default class Game extends Phaser.Scene {
   private windows: Phaser.GameObjects.Image[] = [];
 
   private coins!: Phaser.Physics.Arcade.StaticGroup;
+
+  private speedTimer!: Phaser.Time.TimerEvent;
 
   constructor() {
     super(SceneKeys.Game);
@@ -86,7 +88,6 @@ export default class Game extends Phaser.Scene {
 
     const body = this.mouse.body as Phaser.Physics.Arcade.Body;
     body.setCollideWorldBounds(true);
-    body.setVelocityX(200);
 
     this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, height - 55);
 
@@ -118,6 +119,15 @@ export default class Game extends Phaser.Scene {
         padding: { left: 15, right: 15, top: 10, bottom: 10 },
       })
       .setScrollFactor(0);
+
+    this.speedTimer = new Phaser.Time.TimerEvent({
+      delay: 1000,
+      loop: true,
+      callback: this.updateSpeed,
+      callbackScope: this,
+    });
+
+    this.time.addEvent(this.speedTimer);
   }
 
   update(): void {
@@ -125,6 +135,10 @@ export default class Game extends Phaser.Scene {
     this.wrapWindows();
     this.wrapBookcases();
     this.wrapLaserObstacle();
+
+    console.log("run speed: " + this.mouse.runSpeed);
+    console.log("fall speed: " + this.mouse.fallSpeed);
+    console.log("fly speed: " + this.mouse.flySpeed);
 
     this.background.setTilePosition(this.cameras.main.scrollX);
     this.teleportBackwards();
@@ -333,6 +347,28 @@ export default class Game extends Phaser.Scene {
         body.updateFromGameObject();
         return null;
       });
+    }
+  }
+
+  private updateSpeed() {
+    if (this.mouse.mouseState === MouseState.Running) {
+      this.mouse.runSpeed = Phaser.Math.Clamp(
+        this.mouse.runSpeed * 1.05,
+        300,
+        1000,
+      );
+
+      this.mouse.fallSpeed = Phaser.Math.Clamp(
+        this.mouse.fallSpeed * 1.05,
+        300,
+        1500,
+      );
+
+      this.mouse.flySpeed = Phaser.Math.Clamp(
+        this.mouse.flySpeed * 1.05,
+        300,
+        2000,
+      );
     }
   }
 }

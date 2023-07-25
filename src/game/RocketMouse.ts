@@ -3,7 +3,7 @@ import TextureKeys from "../consts/TextureKeys";
 import AnimationKeys from "../consts/AnimationKeys";
 import SceneKeys from "../consts/SceneKeys";
 
-enum MouseState {
+export enum MouseState {
   Running,
   Killed,
   Dead,
@@ -13,7 +13,10 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
   private flames: Phaser.GameObjects.Sprite;
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private mouse: Phaser.GameObjects.Sprite;
-  private mouseState = MouseState.Running;
+  public mouseState = MouseState.Running;
+  public flySpeed: number = 1000;
+  public fallSpeed: number = 400;
+  public runSpeed: number = 300;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
@@ -50,17 +53,18 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     const body = this.body as Phaser.Physics.Arcade.Body;
     switch (this.mouseState) {
       case MouseState.Running: {
+        body.setVelocityX(this.runSpeed);
         if (
           this.cursors.space.isDown ||
           this.scene.input.activePointer.isDown
         ) {
-          body.setAccelerationY(-600);
+          body.setAccelerationY(-this.flySpeed);
           this.enableJetpack(true);
 
           // play flying animation
           this.mouse.play(AnimationKeys.RocketMouseFly, true);
         } else {
-          body.setAccelerationY(0);
+          body.setAccelerationY(this.fallSpeed);
           this.enableJetpack(false);
         }
 
@@ -174,5 +178,17 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
       }),
       frameRate: 10,
     });
+  }
+
+  setFallSpeed(speed: number) {
+    this.fallSpeed = speed;
+  }
+
+  setRunSpeed(speed: number) {
+    this.runSpeed = speed;
+  }
+
+  setFlySpeed(speed: number) {
+    this.flySpeed = speed;
   }
 }

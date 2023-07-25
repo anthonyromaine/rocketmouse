@@ -13,8 +13,8 @@ export default class LaserObstacle extends Phaser.GameObjects.Container {
       .image(0, top.y + top.displayHeight, TextureKeys.LaserMiddle)
       .setOrigin(0.5, 0);
 
-    // set height of middle laser to 200px
-    middle.setDisplaySize(middle.width, 200);
+    // set height of middle laser
+    middle.setDisplaySize(middle.width, 100);
 
     // create bottom end of laser
     const bottom = scene.add
@@ -35,7 +35,7 @@ export default class LaserObstacle extends Phaser.GameObjects.Container {
       (top.displayHeight + middle.displayHeight + bottom.displayHeight) * 0.8;
 
     body.setSize(width, height);
-    body.setOffset(-width * 0.5, 40);
+    body.setOffset(-width * 0.5, 30);
 
     // reposition body
     body.position.x = this.x + body.offset.x;
