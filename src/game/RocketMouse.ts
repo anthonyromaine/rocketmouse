@@ -50,7 +50,10 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     const body = this.body as Phaser.Physics.Arcade.Body;
     switch (this.mouseState) {
       case MouseState.Running: {
-        if (this.cursors.space.isDown) {
+        if (
+          this.cursors.space.isDown ||
+          this.scene.input.activePointer.isDown
+        ) {
           body.setAccelerationY(-600);
           this.enableJetpack(true);
 

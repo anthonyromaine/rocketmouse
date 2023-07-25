@@ -120,7 +120,7 @@ export default class Game extends Phaser.Scene {
       .setScrollFactor(0);
   }
 
-  update(time: number, delta: number): void {
+  update(): void {
     this.wrapMouseHole();
     this.wrapWindows();
     this.wrapBookcases();
@@ -232,10 +232,7 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  private handleOverlapLaser(
-    obj1: Phaser.GameObjects.GameObject,
-    obj2: Phaser.GameObjects.GameObject,
-  ) {
+  private handleOverlapLaser() {
     this.mouse.kill();
   }
 
@@ -279,8 +276,10 @@ export default class Game extends Phaser.Scene {
   }
 
   private handleCollectCoin(
-    obj1: Phaser.GameObjects.GameObject,
-    obj2: Phaser.GameObjects.GameObject,
+    _obj1:
+      | Phaser.Types.Physics.Arcade.GameObjectWithBody
+      | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
   ) {
     const coin = obj2 as Phaser.Physics.Arcade.Sprite;
 
